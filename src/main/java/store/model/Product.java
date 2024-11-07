@@ -2,8 +2,6 @@ package store.model;
 
 import store.utils.Converter;
 
-import static store.loader.PromotionLoader.findPromotion;
-
 public class Product {
     private final String name;
     private final int price;
@@ -26,6 +24,9 @@ public class Product {
                 Converter.toInt(parts[2]),
                 findPromotion(parts[3])
         );
+    }
+    public static boolean isValidFormat(String line) {
+        return line.split(",").length == 4;
     }
 
     public String getName() {
