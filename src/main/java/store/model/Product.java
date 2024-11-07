@@ -15,14 +15,14 @@ public class Product {
         this.promotion = promotion;
     }
 
-    public static Product createProduct(String line) {
+    public static Product createProduct(String line ,Promotions promotions) {
         String[] parts = line.split(",");
 
         return new Product(
                 parts[0],
                 Converter.toInt(parts[1]),
                 Converter.toInt(parts[2]),
-                findPromotion(parts[3])
+                promotions.findPromotion(parts[3])
         );
     }
     public static boolean isValidFormat(String line) {
