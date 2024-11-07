@@ -39,7 +39,7 @@ public class Promotion {
         return this.name.equalsIgnoreCase(name);
     }
 
-    private static boolean isInvalidName(String name) {
+    private boolean isInvalidName(String name) {
         return name == null || name.isBlank() || name.equalsIgnoreCase("null");
     }
 
