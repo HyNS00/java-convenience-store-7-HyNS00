@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class Loader<T> {
-
     public abstract T load();
 
     protected static List<String> loadFromMd(String resourcePath) {
@@ -19,7 +18,6 @@ public abstract class Loader<T> {
         }
         return lines;
     }
-
 
     private static List<String> readLines(String resourcePath) {
         try (BufferedReader reader = createBufferedReader(resourcePath)) {
