@@ -2,71 +2,22 @@ package store.loader;
 
 import store.ResourcePath;
 import store.model.Promotion;
+import store.model.Promotions;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.List;
 
-public class PromotionLoader {
-    private static List<Promotion> cachedPromotions = null;
+public class PromotionLoader extends Loader<Promotions> {
 
-    private PromotionLoader() {
-    }
-
-    public static Promotion findPromotion(String name) {
-
-        return getPromotions().stream().filter(promotion -> promotion.matchesName(name))
-                .findFirst()
-                .orElse(null);
-    }
-
-    private static List<Promotion> getPromotions() {
-        if (cachedPromotions == null) {
-            cachedPromotions = loadFromMd(ResourcePath.PROMOTIONS.getPath());
-        }
-        return cachedPromotions;
-    }
-
-    private static List<Promotion> loadFromMd(String resourcePath) {
-        List<String> lines = readLines(resourcePath);
-        if (lines.isEmpty()) {
-            return Collections.emptyList();
-        }
-
+    @Override
+    public Promotions load() {
+        List<String> lines = loadFromMd(ResourcePath.PROMOTIONS.getPath());
         return parsePromotions(lines);
-
     }
 
-    private static List<Promotion> parsePromotions(List<String> lines) {
-        return lines.stream().skip(1).filter(Promotion::isValidFormat)
-                .map(Promotion::createPromotion).toList();
+    private Promotions parsePromotions(List<String> lines) {
+        List<Promotion> promotions = lines.stream().skip(1).filter(Promotion::isValidFormat)
+                .map(Promotion::createPromotion)
+                .toList();
+        return new Promotions(promotions);
     }
-
-    private static List<String> readLines(String resourcePath) {
-        try (BufferedReader reader = createBufferedReader(resourcePath)) {
-            return reader.lines().toList();
-        } catch (IOException e) {
-            throw new RuntimeException("파일 읽기 실패");
-        }
-    }
-
-    private static BufferedReader createBufferedReader(String resourcePath) {
-        return new BufferedReader(new InputStreamReader(getInputStream(resourcePath),
-                StandardCharsets.UTF_8));
-    }
-
-    private static InputStream getInputStream(String resourcePath) {
-        InputStream inputStream = PromotionLoader.class.getClassLoader()
-                .getResourceAsStream(resourcePath);
-        if (inputStream == null) {
-            throw new IllegalArgumentException("파일을 찾을 수 없습니다: " + resourcePath);
-        }
-        return inputStream;
-    }
-
-
 }
