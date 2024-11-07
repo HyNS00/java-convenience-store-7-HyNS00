@@ -1,5 +1,7 @@
 package store.model;
 
+import store.utils.Converter;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -20,12 +22,13 @@ public class Promotion {
 
     public static Promotion createPromotion(String line) {
         String[] parts = line.split(",");
+
         return new Promotion(
                 parts[0],
-                extractNumber(parts[1]),
-                extractNumber(parts[2]),
-                extractDate(parts[3]),
-                extractDate(parts[4])
+                Converter.toInt(parts[1]),
+                Converter.toInt(parts[2]),
+                Converter.toDate(parts[3]),
+                Converter.toDate(parts[4])
         );
     }
 
@@ -33,14 +36,6 @@ public class Promotion {
         return line.split(",").length == 5;
     }
 
-    private static LocalDate extractDate(String dateSr) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return LocalDate.parse(dateSr.trim(), formatter);
-    }
-
-    private static int extractNumber(String value) {
-        return Integer.parseInt(value);
-    }
 
     public String getName() {
         return name;

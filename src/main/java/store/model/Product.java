@@ -1,11 +1,13 @@
 package store.model;
 
+import store.utils.Converter;
+
 import static store.loader.PromotionLoader.findPromotion;
 
 public class Product {
     private final String name;
     private final int price;
-    private  int quantity;
+    private int quantity;
     private final Promotion promotion;
 
     private Product(final String name, final int price, int quantity, final Promotion promotion) {
@@ -15,14 +17,15 @@ public class Product {
         this.promotion = promotion;
     }
 
-    public static Product createProduct(String line){
+    public static Product createProduct(String line) {
         String[] parts = line.split(",");
-        String name = parts[0];
-        int price = Integer.parseInt(parts[1]);
-        int quantity = Integer.parseInt(parts[2]);
-        Promotion promotion = findPromotion(parts[3]);
 
-        return new Product(name,price,quantity,promotion);
+        return new Product(
+                parts[0],
+                Converter.toInt(parts[1]),
+                Converter.toInt(parts[2]),
+                findPromotion(parts[3])
+        );
     }
 
     public String getName() {
