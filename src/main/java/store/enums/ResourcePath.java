@@ -1,4 +1,4 @@
-package store;
+package store.enums;
 
 public enum ResourcePath {
     PRODUCTS("products.md"),

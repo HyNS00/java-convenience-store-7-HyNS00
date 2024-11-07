@@ -1,6 +1,6 @@
 package store.loader;
 
-import store.ResourcePath;
+import store.enums.ResourcePath;
 import store.model.Product;
 import store.model.Products;
 import store.model.Promotions;
