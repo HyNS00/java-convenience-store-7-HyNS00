@@ -14,18 +14,14 @@ import java.util.List;
 public class PromotionLoader {
     private static List<Promotion> cachedPromotions = null;
 
-    public static Promotion findPromotion(String name) {
-        if (isInvalidName(name)) {
-            return null;
-        }
-
-        return getPromotions().stream().filter(promotion -> promotion.getName().equals(name))
-                .findFirst()
-                .orElse(null);
+    private PromotionLoader() {
     }
 
-    private static boolean isInvalidName(String name) {
-        return name == null || name.isBlank() || name.equalsIgnoreCase("null");
+    public static Promotion findPromotion(String name) {
+
+        return getPromotions().stream().filter(promotion -> promotion.matchesName(name))
+                .findFirst()
+                .orElse(null);
     }
 
     private static List<Promotion> getPromotions() {
