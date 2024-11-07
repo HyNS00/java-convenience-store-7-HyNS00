@@ -1,5 +1,6 @@
 package store.model;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Products {
@@ -9,5 +10,7 @@ public class Products {
         this.products = products;
     }
 
-
+    public List<Product> getProducts() {
+        return Collections.unmodifiableList(products);
+    }
 }
