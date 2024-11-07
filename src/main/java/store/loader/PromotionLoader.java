@@ -16,12 +16,24 @@ import java.util.List;
 public class PromotionLoader {
     private static List<Promotion> cachedPromotions = null;
 
-    private static List<Promotion> getPromotions (){
-        if(cachedPromotions == null){
+    public static Promotion findPromotion(String name) {
+        if (name == null || name.isBlank() || name.equalsIgnoreCase("null")) {
+            return null;
+        }
+        List<Promotion> promotions = getPromotions();
+
+        return promotions.stream().filter(promotion -> promotion.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private static List<Promotion> getPromotions() {
+        if (cachedPromotions == null) {
             cachedPromotions = loadFromMd(ResourcePath.PROMOTIONS.getPath());
         }
         return cachedPromotions;
     }
+
     private static List<Promotion> loadFromMd(String resourcePath) {
         List<Promotion> promotions = new ArrayList<>();
 
@@ -54,15 +66,6 @@ public class PromotionLoader {
         }
 
         return promotions;
-    }
-
-    public static Promotion findPromotion(String name){
-        if(name == null  || name.isBlank() || name.equalsIgnoreCase("null")){
-            return null;
-        }
-        return cachedPromotions.stream().filter(promotion -> promotion.getName().equals(name))
-                .findFirst()
-                .orElse(null);
     }
 
 }
