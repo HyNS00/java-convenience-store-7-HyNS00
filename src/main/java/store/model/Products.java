@@ -13,4 +13,15 @@ public class Products {
     public List<Product> getProducts() {
         return Collections.unmodifiableList(products);
     }
+
+    public Product findProduct(String name){
+        return products.stream().filter(product -> product.matchesName(name))
+                .findFirst().orElse(null);
+    }
+
+    public int getTotalQuantity(String name){
+        return products.stream().filter(product -> product.matchesName(name))
+                .mapToInt(Product::getQuantity)
+                .sum();
+    }
 }
