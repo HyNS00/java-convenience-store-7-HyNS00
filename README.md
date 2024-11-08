@@ -201,16 +201,19 @@ N
     - [ ] 멤버십 할인 금액
     - [ ] 최종 결제 금액
 
-### 예외 
-```IllegalArgumentException```
-- [x] 파일의 이름이 잘못된 경우 발생
-- [ ] 구매할 상품과 수량 형식이 올바르지 않는 경우
+### ⚠️ 예외
+- [x] **파일 관련**
+  - [x] 파일의 이름이 잘못된 경우  ```IllegalArgumentException```
+  - [x] 파일 읽기를 실패한 경우 ```RuntimeException```
+- [x] **입력** 
+  - [x] 빈 칸을 입력한 경우 ```IllegalArgumentException```
+  - [x] 잘못된 상품 구매 형식을 입력한 경우 ```IllegalArgumentException```
+  - [x] 잘못된 Y/N 응답을 입력한 경우 ```IllegalArgumentException```
+
 - [ ] 존재하지 않는 상품을 입력한 경우
 - [ ] 구매 수량이 재고 수량을 초과한 경우
 - [ ] 기타 잘못된 입력의 경우  
 
-```RuntimeException```
-- [x] 파일 읽기를 실패한 경우 발생
 ### 로더
 - [x] 리소스 경로에서 파일을 읽어온다.
 - [x] 빈 파일의 경우 빈 리스트를 반환한다.
