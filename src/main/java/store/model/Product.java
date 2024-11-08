@@ -15,7 +15,7 @@ public class Product {
         this.promotion = promotion;
     }
 
-    public static Product createProduct(String line ,Promotions promotions) {
+    public static Product createProduct(String line, Promotions promotions) {
         String[] parts = line.split(",");
 
         return new Product(
@@ -25,8 +25,13 @@ public class Product {
                 promotions.findPromotion(parts[3])
         );
     }
+
     public static boolean isValidFormat(String line) {
         return line.split(",").length == 4;
+    }
+
+    public boolean matchesName(String name) {
+        return this.name.equalsIgnoreCase(name);
     }
 
     public String getName() {
@@ -44,6 +49,4 @@ public class Product {
     public Promotion getPromotion() {
         return promotion;
     }
-
-
 }
