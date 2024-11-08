@@ -3,6 +3,7 @@ package store.model;
 import store.utils.Converter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Promotion {
     private final String name;
@@ -39,6 +40,11 @@ public class Promotion {
         return this.name.equalsIgnoreCase(name);
     }
 
+    public boolean isValidPromotion(LocalDateTime now) {
+        LocalDate today = now.toLocalDate();
+        return today.isAfter(startDate) && today.isBefore(endDate);
+    }
+
     private boolean isInvalidName(String name) {
         return name == null || name.isBlank() || name.equalsIgnoreCase("null");
     }
@@ -46,7 +52,6 @@ public class Promotion {
     public static boolean isValidFormat(String line) {
         return line.split(",").length == 5;
     }
-
 
     public String getName() {
         return name;
