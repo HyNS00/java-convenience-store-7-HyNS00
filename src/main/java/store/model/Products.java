@@ -2,6 +2,7 @@ package store.model;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class Products {
     private final List<Product> products;
@@ -14,14 +15,23 @@ public class Products {
         return Collections.unmodifiableList(products);
     }
 
-    public Product findProduct(String name){
+    public Optional<Product> findProduct(String name){
         return products.stream().filter(product -> product.matchesName(name))
-                .findFirst().orElse(null);
+                .findFirst();
     }
 
     public int getTotalQuantity(String name){
         return products.stream().filter(product -> product.matchesName(name))
                 .mapToInt(Product::getQuantity)
                 .sum();
+    }
+
+    public Product findNonPromotionalProduct(String name){
+        return findProduct(name).filter(product -> product.getPromotion() == null).orElse(null);
+
+    }
+
+    public Product findPromotionProduct(String name){
+        return findProduct(name).filter(product -> product.getPromotion() != null).orElse(null);
     }
 }
