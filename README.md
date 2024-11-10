@@ -209,9 +209,8 @@ N
   - [x] 빈 칸을 입력한 경우 ```IllegalArgumentException```
   - [x] 잘못된 상품 구매 형식을 입력한 경우 ```IllegalArgumentException```
   - [x] 잘못된 Y/N 응답을 입력한 경우 ```IllegalArgumentException```
-
-- [ ] 존재하지 않는 상품을 입력한 경우
-- [ ] 구매 수량이 재고 수량을 초과한 경우
+  - [x] 존재하지 않는 상품을 입력한 경우 ```IllegalArgumentException```
+  - [x] 구매 수량이 재고 수량을 초과한 경우 ```IllegalArgumentException```
 - [ ] 기타 잘못된 입력의 경우  
 
 ### 로더
@@ -222,3 +221,4 @@ N
 - [x] 문자열을 각 자료형으로 변환해주는 유틸리티
   - [x] 문자열을 숫자로 변환한다.
   - [x] 문자열을 날짜 객체로 변환한다.
+  - [x] 입력 문자열을 나눠 주문목록 리스트로 변환한다.
