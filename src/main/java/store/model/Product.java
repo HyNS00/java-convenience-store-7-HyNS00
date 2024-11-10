@@ -49,4 +49,8 @@ public class Product {
     public Promotion getPromotion() {
         return promotion;
     }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }
