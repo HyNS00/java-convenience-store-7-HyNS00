@@ -1,5 +1,6 @@
 package store.model;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import store.utils.Converter;
 
 import java.time.LocalDate;
@@ -40,8 +41,8 @@ public class Promotion {
         return this.name.equalsIgnoreCase(name);
     }
 
-    public boolean isValidPromotion(LocalDateTime now) {
-        LocalDate today = now.toLocalDate();
+    public boolean isValidPromotion() {
+        LocalDate today = DateTimes.now().toLocalDate();
         return today.isAfter(startDate) && today.isBefore(endDate);
     }
 
