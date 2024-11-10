@@ -15,12 +15,12 @@ public class Products {
         return Collections.unmodifiableList(products);
     }
 
-    public Optional<Product> findProduct(String name){
+    public Optional<Product> findProduct(String name) {
         return products.stream().filter(product -> product.matchesName(name))
                 .findFirst();
     }
 
-    public int getTotalQuantity(String name){
+    public int getTotalQuantity(String name) {
         return products.stream().filter(product -> product.matchesName(name))
                 .mapToInt(Product::getQuantity)
                 .sum();
@@ -35,22 +35,21 @@ public class Products {
         return findProduct(name).filter(product -> product.getPromotion() != null).orElse(null);
     }
 
-    public void updateInventory(OrderItem orderItem){
+    public void updateInventory(OrderItem orderItem) {
         updatePromotionProduct(orderItem);
         updateNormalNormal(orderItem);
     }
 
-    private void updatePromotionProduct(OrderItem orderItem){
+    private void updatePromotionProduct(OrderItem orderItem) {
         Product promotionProduct = findPromotionProduct(orderItem.getProductName());
         if (promotionProduct != null) {
             int deduction = calculatePromotionDeduction(orderItem.getResult());
             promotionProduct.setQuantity(promotionProduct.getQuantity() - deduction);
         }
     }
+
     private int calculatePromotionDeduction(PromotionResult result) {
-        return result.getPromotionPurchase() +
-                result.getPromotionBonus() +
-                result.getNormalPurchaseFromPromo();
+        return result.getTotal() - result.getNormalPurchaseFromNormal();
     }
 
     private void updateNormalNormal(OrderItem orderItem) {
