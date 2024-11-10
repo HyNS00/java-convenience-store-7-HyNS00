@@ -26,12 +26,38 @@ public class Products {
                 .sum();
     }
 
-    public Product findNonPromotionalProduct(String name){
+    public Product findNonPromotionalProduct(String name) {
         return findProduct(name).filter(product -> product.getPromotion() == null).orElse(null);
 
     }
 
-    public Product findPromotionProduct(String name){
+    public Product findPromotionProduct(String name) {
         return findProduct(name).filter(product -> product.getPromotion() != null).orElse(null);
+    }
+
+    public void updateInventory(OrderItem orderItem){
+        updatePromotionProduct(orderItem);
+        updateNormalNormal(orderItem);
+    }
+
+    private void updatePromotionProduct(OrderItem orderItem){
+        Product promotionProduct = findPromotionProduct(orderItem.getProductName());
+        if (promotionProduct != null) {
+            int deduction = calculatePromotionDeduction(orderItem.getResult());
+            promotionProduct.setQuantity(promotionProduct.getQuantity() - deduction);
+        }
+    }
+    private int calculatePromotionDeduction(PromotionResult result) {
+        return result.getPromotionPurchase() +
+                result.getPromotionBonus() +
+                result.getNormalPurchaseFromPromo();
+    }
+
+    private void updateNormalNormal(OrderItem orderItem) {
+        Product normalProduct = findNonPromotionalProduct(orderItem.getProductName());
+        if (normalProduct != null) {
+            int deduction = orderItem.getResult().getNormalPurchaseFromNormal();
+            normalProduct.setQuantity(normalProduct.getQuantity() - deduction);
+        }
     }
 }
