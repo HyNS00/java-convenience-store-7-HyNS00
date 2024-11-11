@@ -31,7 +31,12 @@ public class PaymentService {
     }
 
     private long calculateMemberShipDiscount(List<OrderItem> orderItems) {
-        return Math.min((long) (calculateTotalSum(orderItems) * 0.3), 8000);
+        long discountAmount = (long) (calculateTotalSum(orderItems) * 0.3);
+        return Math.min(roundDownToThousand(discountAmount), 8000);
+    }
+
+    private long roundDownToThousand(long amount) {
+        return (amount / 1000) * 1000;
     }
 
     private long calculateTotalSum(List<OrderItem> orderItems) {
