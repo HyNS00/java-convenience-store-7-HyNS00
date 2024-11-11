@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class PaymentService {
-    private static final double MEMBERSHIP_DISCOUNT_RATE = 0.3;
     private final Products products;
 
     public PaymentService(Products products) {
@@ -33,7 +32,15 @@ public class PaymentService {
     }
 
     private long calculateMemberShipDiscount(List<OrderItem> orderItems) {
-        long discountAmount = (long) (calculateTotalSum(orderItems) * MEMBERSHIP_DISCOUNT_RATE);
+        long totalSum = calculateTotalSum(orderItems);
+        long discountAmount = totalSum * NumericValue.MEMBERSHIP_DISCOUNT_RATE.getValue() / 100;
+        long roundedAmount = roundDownToThousand(discountAmount);
+        if (roundedAmount < NumericValue.MIN_MEMBERSHIP_DISCOUNT.getValue()) {
+            return 0;
+        }
+        if (roundedAmount > NumericValue.MAX_MEMBERSHIP_DISCOUNT.getValue()) {
+            return NumericValue.MAX_MEMBERSHIP_DISCOUNT.getValue();
+        }
         return Math.min(roundDownToThousand(discountAmount), NumericValue.MAX_MEMBERSHIP_DISCOUNT.getValue());
     }
 
