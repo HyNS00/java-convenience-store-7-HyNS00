@@ -1,5 +1,6 @@
 package store.view;
 
+import store.enums.DiscountType;
 import store.enums.DisplayMessage;
 import store.enums.OutputMessage;
 import store.model.*;
@@ -20,7 +21,7 @@ public class OutputView {
     }
 
     private String formatProduct(Product product) {
-        return String.format("- %s %,d원 %s%s",
+        return String.format(OutputMessage.PRODUCT_FORMAT.getMessage(),
                 product.getName(),
                 product.getPrice(),
                 formatQuantity(product.getQuantity()),
@@ -30,16 +31,16 @@ public class OutputView {
 
     private String formatQuantity(int quantity) {
         if (quantity == 0) {
-            return "재고 없음";
+            return OutputMessage.OUT_OF_STOCK.getMessage();
         }
-        return String.format("%d개", quantity);
+        return String.format(OutputMessage.PRODUCT_QUANTITY.getMessage(), quantity);
     }
 
     private String formatPromotion(Promotion promotion) {
         if (promotion == null) {
-            return "";
+            return OutputMessage.EMPTY.getMessage();
         }
-        return " " + promotion.getName();
+        return OutputMessage.WHITE_SPACE.getMessage() + promotion.getName();
     }
 
     public void printReceipt(Receipt receipt, List<OrderItem> orderItems, Products products) {
@@ -64,7 +65,7 @@ public class OutputView {
                     .orElseGet(() -> products.findNonPromotionalProduct(item.getProductName()));
             long totalAmount = (long) product.getPrice() * purchaseQuantity;
             if (purchaseQuantity > 0) {
-                System.out.printf("%-8s      %2d     %,8d%n",
+                System.out.printf(OutputMessage.PURCHASE_ORDER_ITEM_FORMAT.getMessage(),
                         item.getProductName(),
                         purchaseQuantity,
                         totalAmount);
@@ -79,7 +80,7 @@ public class OutputView {
             System.out.printf(DisplayMessage.BONUS_HEADER.getMessage());
             orderItems.stream()
                     .filter(item -> item.getResult().getPromotionBonus() > 0)
-                    .forEach(item -> System.out.printf("%-12s      %d%n",
+                    .forEach(item -> System.out.printf(OutputMessage.BONUS_ITEM_FORMAT.getMessage(),
                             item.getProductName(),
                             item.getResult().getPromotionBonus()));
         }
@@ -91,29 +92,28 @@ public class OutputView {
                 .mapToInt(OrderItem::getTotal)
                 .sum();
 
-        System.out.printf("총구매액          %2d     %,8d%n",
+        System.out.printf(OutputMessage.TOTAL_AMOUNT_FORMAT.getMessage(),
                 totalItems,
                 receipt.getTotalAmount());
 
-        if (receipt.getBonusDiscount() > 0) {
-            System.out.printf("행사할인                 %+,8d%n",
-                    -receipt.getBonusDiscount());
-        }
+        printDiscounts(receipt);
 
-        if (receipt.getBonusDiscount() == 0) {
-            System.out.printf("행사할인                 %8s%n", "-0");
-        }
-
-        if (receipt.getMembershipDiscount() > 0) {
-            System.out.printf("멤버십할인               %+,8d%n",
-                    -receipt.getMembershipDiscount());
-        }
-
-        if (receipt.getMembershipDiscount() == 0) {
-            System.out.printf("멤버십할인                 %8s%n", "-0");
-        }
-        System.out.printf("내실돈                   %,8d\n",
+        System.out.printf(OutputMessage.FINAL_AMOUNT_FORMAT.getMessage(),
                 receipt.getFinalAmount());
+    }
+
+    private void printDiscounts(Receipt receipt) {
+        printDiscount(DiscountType.BONUS.getDisplayName(), receipt.getBonusDiscount());
+        printDiscount(DiscountType.MEMBERSHIP.getDisplayName(), receipt.getMembershipDiscount());
+    }
+
+    private void printDiscount(String discountName, long amount) {
+        if (amount > 0) {
+            System.out.printf(OutputMessage.DISCOUNT_FORMAT.getMessage(), discountName, -amount);
+            return;
+        }
+        System.out.printf(OutputMessage.ZERO_DISCOUNT_FORMAT.getMessage(),
+                discountName, OutputMessage.DISCOUNT_ZERO.getMessage());
     }
 
     public void printErrorMessage(IllegalArgumentException exception) {
