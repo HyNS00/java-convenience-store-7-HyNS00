@@ -7,13 +7,14 @@ public class Application {
         // TODO: 프로그램 구현
         runStore();
     }
-    private static void runStore(){
-        try{
+
+    private static void runStore() {
+        try {
             StoreController storeController = StoreFactory.create();
             storeController.start();
-        }catch (IllegalArgumentException  e) {
+        } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             System.err.println(e.getMessage());
         }
     }

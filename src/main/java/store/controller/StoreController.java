@@ -1,7 +1,5 @@
 package store.controller;
 
-import store.loader.ProductLoader;
-import store.loader.PromotionLoader;
 import store.model.*;
 import store.service.OrderService;
 import store.service.PaymentService;
@@ -20,7 +18,7 @@ public class StoreController {
     private Products products;
     private PaymentService paymentService;
 
-    public StoreController(InputView inputView, Products products ,Services services, OutputView outputView) {
+    public StoreController(InputView inputView, Products products, Services services, OutputView outputView) {
         this.inputView = inputView;
         this.products = products;
         this.orderService = services.getOrderService();
@@ -38,16 +36,17 @@ public class StoreController {
                 continue;
             }
             Receipt receipt = processMemberShip();
-            outputView.printReceipt(receipt,orderService.getOrderItems(),
+            outputView.printReceipt(receipt, orderService.getOrderItems(),
                     products);
             updateInventoryForOrders(orderService.getOrderItems());
             continueProgram = askForRestart();
         }
 
     }
-    private boolean processOrderWithRetry(){
-        while(true){
-            try{
+
+    private boolean processOrderWithRetry() {
+        while (true) {
+            try {
                 List<Order> orders = createOrderWithRetry();
                 if (processOrders(orders, products)) {
                     return false;
