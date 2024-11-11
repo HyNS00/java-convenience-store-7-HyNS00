@@ -27,17 +27,27 @@ public class Products {
     }
 
     public Product findNonPromotionalProduct(String name) {
-        return findProduct(name).filter(product -> product.getPromotion() == null).orElse(null);
-
+        return products.stream()
+                .filter(product -> product.getPromotion() == null && product.getName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     public Product findPromotionProduct(String name) {
-        return findProduct(name).filter(product -> product.getPromotion() != null).orElse(null);
+        return products.stream()
+                .filter(product -> product.getPromotion() != null && product.getName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     public void updateInventory(OrderItem orderItem) {
-        updatePromotionProduct(orderItem);
-        updateNormalNormal(orderItem);
+        if (orderItem.getResult().getPromotionPurchase() > 0) {
+            updatePromotionProduct(orderItem);
+        }
+
+        if (orderItem.getResult().getNormalPurchaseFromNormal() > 0) {
+            updateNormalNormal(orderItem);
+        }
     }
 
     private void updatePromotionProduct(OrderItem orderItem) {
@@ -49,7 +59,7 @@ public class Products {
     }
 
     private int calculatePromotionDeduction(PromotionResult result) {
-        return result.getTotal() - result.getNormalPurchaseFromNormal();
+        return result.getPromotionBonus() + result.getPromotionPurchase() + result.getNormalPurchaseFromPromo();
     }
 
     private void updateNormalNormal(OrderItem orderItem) {
