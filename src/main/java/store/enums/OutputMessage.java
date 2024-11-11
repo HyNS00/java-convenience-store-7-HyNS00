@@ -12,7 +12,8 @@ public enum OutputMessage {
     FINAL_AMOUNT_FORMAT("내실돈                   %,8d\n"),
     DISCOUNT_FORMAT("%-8s                 %+,8d%n"),
     ZERO_DISCOUNT_FORMAT("%-8s                 %8s%n"),
-    DISCOUNT_ZERO("-0");
+    DISCOUNT_ZERO("-0"),
+    OUT_OF_STOCK("재고 없음");
 
     private final String message;
 
