@@ -15,39 +15,49 @@ public class PromotionResult {
 
     public static PromotionResult calculate(Products products, String productName, int totalQuantity) {
         Product promotionProduct = products.findPromotionProduct(productName);
-        if (promotionProduct == null || !promotionProduct.getPromotion().isValidPromotion()) {
+        if (isInvalidPromotion(promotionProduct)) {
             return new PromotionResult(0, 0, 0, totalQuantity);
         }
 
+        return calculateValidPromotion(promotionProduct, totalQuantity);
+    }
+
+    private static boolean isInvalidPromotion(Product promotionProduct) {
+        return promotionProduct == null
+                || !promotionProduct.getPromotion().isValidPromotion()
+                || promotionProduct.getQuantity() == 0;
+    }
+
+    private static PromotionResult calculateValidPromotion(Product promotionProduct, int totalQuantity) {
+        Promotion promotion = promotionProduct.getPromotion();
         int availablePromotionStock = promotionProduct.getQuantity();
 
-        if (availablePromotionStock == 0) {
-            return new PromotionResult(0, 0, 0, totalQuantity);
-        }
-
-        Promotion promotion = promotionProduct.getPromotion();
-        int buyUnit = promotion.getBuy();
-        int getUnit = promotion.getBonus();
-        int set = buyUnit + getUnit;
-
+        int set = promotion.getBuy() + promotion.getBonus();
         int availableSet = Math.min(availablePromotionStock / set, totalQuantity / set);
 
-        int promotionPurchase = buyUnit * availableSet;
-        int promotionBonus = getUnit * availableSet;
+        int promotionPurchase = promotion.getBuy() * availableSet;
+        int promotionBonus = promotion.getBonus() * availableSet;
 
+        return calculateRemaining(promotionPurchase, promotionBonus, totalQuantity,
+                availablePromotionStock, set, availableSet);
+    }
+
+    private static PromotionResult calculateRemaining(int promotionPurchase, int promotionBonus, int totalQuantity,
+                                                      int availablePromotionStock, int set, int availableSet) {
         int remainingQuantity = totalQuantity - (promotionBonus + promotionPurchase);
         int remainingPromotionStock = availablePromotionStock - (availableSet * set);
 
         int normalPurchaseFromPromo = Math.min(remainingQuantity, remainingPromotionStock);
         int normalPurchaseFromNormal = remainingQuantity - normalPurchaseFromPromo;
+
         return new PromotionResult(promotionPurchase, promotionBonus, normalPurchaseFromPromo, normalPurchaseFromNormal);
     }
 
-    public int getPartialPromo(){
+    public int getPartialPromo() {
         return normalPurchaseFromPromo + normalPurchaseFromNormal;
     }
 
-    public int getTotal(){
+    public int getTotal() {
         return promotionPurchase + promotionBonus + normalPurchaseFromPromo + normalPurchaseFromNormal;
     }
 
@@ -63,7 +73,7 @@ public class PromotionResult {
         return normalPurchaseFromNormal;
     }
 
-    public int getPromotionBonus(){
+    public int getPromotionBonus() {
         return promotionBonus;
     }
 }
