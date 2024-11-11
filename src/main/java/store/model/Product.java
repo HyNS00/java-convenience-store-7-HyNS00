@@ -4,6 +4,7 @@ import store.enums.NumericValue;
 import store.utils.Converter;
 
 public class Product {
+    private static final String SEPARATOR = ",";
     private final String name;
     private final int price;
     private int quantity;
@@ -17,7 +18,7 @@ public class Product {
     }
 
     public static Product createProduct(String line, Promotions promotions) {
-        String[] parts = line.split(",");
+        String[] parts = line.split(SEPARATOR);
 
         return new Product(
                 parts[0],
@@ -28,7 +29,7 @@ public class Product {
     }
 
     public static boolean isValidFormat(String line) {
-        return line.split(",").length == NumericValue.PRODUCT_INFO_LENGTH.getValue();
+        return line.split(SEPARATOR).length == NumericValue.PRODUCT_INFO_LENGTH.getValue();
     }
 
     public boolean matchesName(String name) {

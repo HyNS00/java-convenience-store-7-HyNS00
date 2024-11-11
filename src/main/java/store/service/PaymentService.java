@@ -1,5 +1,6 @@
 package store.service;
 
+import store.enums.NumericValue;
 import store.model.OrderItem;
 import store.model.Product;
 import store.model.Products;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PaymentService {
+    private static final double MEMBERSHIP_DISCOUNT_RATE = 0.3;
     private final Products products;
 
     public PaymentService(Products products) {

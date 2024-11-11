@@ -7,6 +7,7 @@ public enum DisplayMessage {
     ITEM_HEADER("상품명            수량         금액"),
     BONUS_HEADER("=============증\t정==================\n"),
     SEPARATOR_LINE("====================================");
+
     private final String message;
 
     DisplayMessage(String message) {

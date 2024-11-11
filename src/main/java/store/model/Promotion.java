@@ -7,6 +7,9 @@ import store.utils.Converter;
 import java.time.LocalDate;
 
 public class Promotion {
+    private static final String SEPARATOR = ",";
+    private static final String NULL_WORD = "null";
+
     private final String name;
     private final int buy;
     private final int bonus;
@@ -22,7 +25,7 @@ public class Promotion {
     }
 
     public static Promotion createPromotion(String line) {
-        String[] parts = line.split(",");
+        String[] parts = line.split(SEPARATOR);
 
         return new Promotion(
                 parts[0],
@@ -47,11 +50,11 @@ public class Promotion {
     }
 
     private boolean isInvalidName(String name) {
-        return name == null || name.isBlank() || name.equalsIgnoreCase("null");
+        return name == null || name.isBlank() || name.equalsIgnoreCase(NULL_WORD);
     }
 
     public static boolean isValidFormat(String line) {
-        return line.split(",").length == NumericValue.PROMOTION_INFO_LENGTH.getValue();
+        return line.split(SEPARATOR).length == NumericValue.PROMOTION_INFO_LENGTH.getValue();
     }
 
     public String getName() {
