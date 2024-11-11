@@ -4,19 +4,18 @@ import camp.nextstep.edu.missionutils.DateTimes;
 import store.utils.Converter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class Promotion {
     private final String name;
     private final int buy;
-    private final int get;
+    private final int bonus;
     private final LocalDate startDate;
     private final LocalDate endDate;
 
-    private Promotion(final String name, final int buy, final int get, final LocalDate startDate, final LocalDate endDate) {
+    private Promotion(final String name, final int buy, final int bonus, final LocalDate startDate, final LocalDate endDate) {
         this.name = name;
         this.buy = buy;
-        this.get = get;
+        this.bonus = bonus;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -62,15 +61,7 @@ public class Promotion {
         return buy;
     }
 
-    public int getGet() {
-        return get;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
+    public int getBonus() {
+        return bonus;
     }
 }

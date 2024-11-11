@@ -64,7 +64,7 @@ class ProductLoaderTest {
         assertThat(product).extracting("name", "price", "quantity")
                 .containsExactly("오렌지주스", 1800, 9);
 
-        assertThat(product.getPromotion()).extracting("name", "buy", "get", "startDate", "endDate")
+        assertThat(product.getPromotion()).extracting("name", "buy", "bonus", "startDate", "endDate")
                 .containsExactly("테스트-프로모션", 1, 1,
                         LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31));

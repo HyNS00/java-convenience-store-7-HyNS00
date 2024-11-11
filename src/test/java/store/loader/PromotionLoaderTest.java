@@ -35,7 +35,7 @@ class PromotionLoaderTest {
         Promotion promotion = testPromotions.findPromotion("테스트-프로모션");
 
         assertThat(promotions).isNotNull();
-        assertThat(promotion).extracting("name", "buy", "get", "startDate", "endDate")
+        assertThat(promotion).extracting("name", "buy", "bonus", "startDate", "endDate")
                 .containsExactly("테스트-프로모션", 1, 1, LocalDate.of(2024, 1, 1),
                         LocalDate.of(2024, 12, 31));
     }

@@ -27,7 +27,7 @@ public class PromotionResult {
 
         Promotion promotion = promotionProduct.getPromotion();
         int buyUnit = promotion.getBuy();
-        int getUnit = promotion.getGet();
+        int getUnit = promotion.getBonus();
         int set = buyUnit + getUnit;
 
         int availableSet = Math.min(availablePromotionStock / set, totalQuantity / set);
