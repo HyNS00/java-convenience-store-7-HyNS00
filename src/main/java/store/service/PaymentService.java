@@ -6,43 +6,48 @@ import store.model.Products;
 import store.model.Receipt;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PaymentService {
-    private List<OrderItem> orderItems;
-    private Products products;
+    private final Products products;
 
-    public Receipt createReceipt(boolean hasMembership) {
-        long totalAmount = sum();
+    public PaymentService(Products products) {
+        this.products = products;
+    }
+
+    public Receipt createReceipt(List<OrderItem> orderItems, boolean hasMembership) {
+        long totalAmount = sum(orderItems);
         long membershipDiscount = 0;
         if (hasMembership) {
-            membershipDiscount = calculateMemberShipDiscount();
+            membershipDiscount = calculateMemberShipDiscount(orderItems);
         }
-        long bonusDiscount = calculateBonusDiscount();
+        long bonusDiscount = calculateBonusDiscount(orderItems);
 
         return new Receipt(totalAmount, membershipDiscount, bonusDiscount);
     }
 
-    private long sum() {
-        return calculateTotalSum();
+    private long sum(List<OrderItem> orderItems) {
+        return calculateTotalSum(orderItems);
     }
 
-    private long calculateMemberShipDiscount() {
-        return Math.min((long) (calculateTotalSum() * 0.3), 8000);
+    private long calculateMemberShipDiscount(List<OrderItem> orderItems) {
+        return Math.min((long) (calculateTotalSum(orderItems) * 0.3), 8000);
     }
 
-    private long calculateTotalSum() {
+    private long calculateTotalSum(List<OrderItem> orderItems) {
         return orderItems.stream()
                 .mapToLong(this::calculateItemTotal)
                 .sum();
     }
 
-    public long calculateBonusDiscount() {
+    public long calculateBonusDiscount(List<OrderItem> orderItems) {
         return orderItems.stream()
                 .mapToLong(this::calculateItemBonusDiscount).sum();
     }
 
     private long calculateItemTotal(OrderItem orderItem) {
-        Product product = products.findNonPromotionalProduct(orderItem.getProductName());
+        Product product = Optional.ofNullable(products.findPromotionProduct(orderItem.getProductName()))
+                .orElseGet(() -> products.findNonPromotionalProduct(orderItem.getProductName()));
         long productPrice = product.getPrice();
         int quantity = orderItem.getTotal();
 
@@ -50,8 +55,9 @@ public class PaymentService {
     }
 
     private long calculateItemBonusDiscount(OrderItem orderItem) {
-        Product promotionProduct = products.findPromotionProduct(orderItem.getProductName());
-        long productPrice = promotionProduct.getPrice();
+        Product product = Optional.ofNullable(products.findPromotionProduct(orderItem.getProductName()))
+                .orElseGet(() -> products.findNonPromotionalProduct(orderItem.getProductName()));
+        long productPrice = product.getPrice();
         int promotionBonus = orderItem.getResult().getPromotionBonus();
 
         return (long) (productPrice * promotionBonus);
