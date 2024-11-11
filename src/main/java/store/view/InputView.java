@@ -23,7 +23,7 @@ public class InputView {
 
     public String requestPlusOrder(Product product) {
         Promotion promotion = product.getPromotion();
-        System.out.printf(InputMessage.REQUEST_ORDER.getMessage(), product.getName());
+        System.out.printf(InputMessage.REQUEST_ADDITIONAL_PRODUCT.getMessage(), product.getName());
         String input = Console.readLine();
         inputValidator.validateResponse(input);
         return input;
