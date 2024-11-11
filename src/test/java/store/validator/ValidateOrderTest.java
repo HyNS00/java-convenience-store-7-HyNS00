@@ -63,7 +63,7 @@ class ValidateOrderTest {
 
     @DisplayName("올바른 구매형식 테스트")
     @ParameterizedTest
-    @ValueSource(strings = {"[빼빼로-3]", "[빼빼로-3],[콜라-3]"})
+    @ValueSource(strings = {"[빼빼로-3]", "[빼빼로-3],[콜라-3]","[콜라-10]"})
     void validateOrderFormat_success(String input) {
         assertThatCode(() -> inputValidator.validateOrder(input))
                 .doesNotThrowAnyException();

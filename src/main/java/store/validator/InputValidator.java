@@ -21,7 +21,7 @@ public class InputValidator {
     }
 
     private void validateOrderFormat(String input) {
-        String regex = "^\\[([가-힣]+)\\-([1-9]+)\\](,\\[([가-힣]+)\\-([1-9]+)\\])*$";
+        String regex = "^\\[([가-힣]+)\\-([1-9][0-9]*)\\](,\\[([가-힣]+)\\-([1-9]+)\\])*$";
         Pattern compile = Pattern.compile(regex);
         if (!compile.matcher(input).matches()) {
             throw new IllegalArgumentException("올바르지 않은 구매 형식입니다.");
