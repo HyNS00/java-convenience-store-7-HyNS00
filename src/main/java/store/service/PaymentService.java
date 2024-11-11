@@ -14,16 +14,8 @@ public class PaymentService {
     }
 
     public Receipt createReceipt(List<OrderItem> orderItems, boolean hasMembership) {
-//        long totalAmount = sum(orderItems);
-//        long membershipDiscount = 0;
-//        if (hasMembership) {
-//            membershipDiscount = calculateMemberShipDiscount(orderItems);
-//        }
-//        long bonusDiscount = calculateBonusDiscount(orderItems);
-//
-//        return new Receipt(totalAmount, membershipDiscount, bonusDiscount);
+
         long totalAmount = sum(orderItems);
-        // 보너스 할인을 먼저 계산
         long bonusDiscount = calculateBonusDiscount(orderItems);
         long membershipDiscount = 0;
         if (hasMembership) {
@@ -38,9 +30,7 @@ public class PaymentService {
     }
 
     private long calculateMemberShipDiscount(List<OrderItem> orderItems) {
-//        long totalSum = calculateTotalSum(orderItems);
-//        long discountAmount = totalSum * NumericValue.MEMBERSHIP_DISCOUNT_RATE.getValue() / 100;
-//        return Math.min(roundDownToThousand(discountAmount), NumericValue.MAX_MEMBERSHIP_DISCOUNT.getValue());
+
         long actualPurchaseAmount = orderItems.stream()
                 .mapToLong(this::calculateActualPurchaseAmount)
                 .sum();
@@ -59,7 +49,7 @@ public class PaymentService {
         long productPrice = product.getPrice();
         PromotionResult result = orderItem.getResult();
 
-        // 실제 구매 수량만 계산 (보너스 제외)
+
         int actualPurchaseQuantity = result.getPromotionPurchase() +
                 result.getNormalPurchaseFromPromo() +
                 result.getNormalPurchaseFromNormal();
