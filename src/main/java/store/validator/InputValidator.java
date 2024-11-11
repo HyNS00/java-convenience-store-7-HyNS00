@@ -1,8 +1,7 @@
 package store.validator;
 
 import store.enums.ExceptionMessage;
-
-import java.util.regex.Pattern;
+import store.enums.RegexFormat;
 
 public class InputValidator {
 
@@ -23,17 +22,13 @@ public class InputValidator {
     }
 
     private void validateOrderFormat(String input) {
-        String regex = "^\\[([가-힣]+)\\-([1-9][0-9]*)\\](,\\[([가-힣]+)\\-([1-9]+)\\])*$";
-        Pattern compile = Pattern.compile(regex);
-        if (!compile.matcher(input).matches()) {
+        if (!RegexFormat.VALID_RESPONSE_FORMAT.getPattern().matcher(input).matches()) {
             throw new IllegalArgumentException(ExceptionMessage.INVALID_FORMAT.getMessage());
         }
     }
 
     private void validateResponseForMat(String input) {
-        String regex = "^[YN]$";
-        Pattern compile = Pattern.compile(regex);
-        if (!compile.matcher(input).matches()) {
+        if (!RegexFormat.VALID_RESPONSE_FORMAT.getPattern().matcher(input).matches()) {
             throw new IllegalArgumentException(ExceptionMessage.INVALID_INPUT.getMessage());
         }
     }
