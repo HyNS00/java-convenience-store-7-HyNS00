@@ -8,8 +8,8 @@ import java.util.Optional;
 public class OutputView {
 
     public void welcomeMessage(Products products){
-        System.out.println("안녕하세요. W편의점입니다.");
-        System.out.println("현재 보유하고 있는 상품입니다.");
+        System.out.println("\n안녕하세요. W편의점입니다.");
+        System.out.println("현재 보유하고 있는 상품입니다.\n");
         products.getProducts().forEach(this::printProduct);
     }
 
@@ -49,7 +49,7 @@ public class OutputView {
 
     }
     private void generateStoreHeader() {
-        System.out.println("==============W 편의점================");
+        System.out.println("\n==============W 편의점================");
         System.out.println("상품명            수량         금액");
 
     }
