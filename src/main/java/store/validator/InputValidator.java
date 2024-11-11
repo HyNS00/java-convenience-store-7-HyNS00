@@ -22,7 +22,7 @@ public class InputValidator {
     }
 
     private void validateOrderFormat(String input) {
-        if (!RegexFormat.VALID_RESPONSE_FORMAT.getPattern().matcher(input).matches()) {
+        if (!RegexFormat.VALID_ORDER_FORMAT.getPattern().matcher(input).matches()) {
             throw new IllegalArgumentException(ExceptionMessage.INVALID_FORMAT.getMessage());
         }
     }
