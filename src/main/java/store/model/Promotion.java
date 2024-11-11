@@ -1,6 +1,7 @@
 package store.model;
 
 import camp.nextstep.edu.missionutils.DateTimes;
+import store.enums.NumericValue;
 import store.utils.Converter;
 
 import java.time.LocalDate;
@@ -50,7 +51,7 @@ public class Promotion {
     }
 
     public static boolean isValidFormat(String line) {
-        return line.split(",").length == 5;
+        return line.split(",").length == NumericValue.PROMOTION_INFO_LENGTH.getValue();
     }
 
     public String getName() {

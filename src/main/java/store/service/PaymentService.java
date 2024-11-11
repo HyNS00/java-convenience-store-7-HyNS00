@@ -31,12 +31,13 @@ public class PaymentService {
     }
 
     private long calculateMemberShipDiscount(List<OrderItem> orderItems) {
-        long discountAmount = (long) (calculateTotalSum(orderItems) * 0.3);
-        return Math.min(roundDownToThousand(discountAmount), 8000);
+        long discountAmount = (long) (calculateTotalSum(orderItems) * MEMBERSHIP_DISCOUNT_RATE);
+        return Math.min(roundDownToThousand(discountAmount), NumericValue.MAX_MEMBERSHIP_DISCOUNT.getValue());
     }
 
     private long roundDownToThousand(long amount) {
-        return (amount / 1000) * 1000;
+        int unit = NumericValue.DISCOUNT_UNIT.getValue();
+        return (amount / unit) * unit;
     }
 
     private long calculateTotalSum(List<OrderItem> orderItems) {

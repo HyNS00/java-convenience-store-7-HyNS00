@@ -1,5 +1,6 @@
 package store.model;
 
+import store.enums.NumericValue;
 import store.utils.Converter;
 
 public class Product {
@@ -27,7 +28,7 @@ public class Product {
     }
 
     public static boolean isValidFormat(String line) {
-        return line.split(",").length == 4;
+        return line.split(",").length == NumericValue.PRODUCT_INFO_LENGTH.getValue();
     }
 
     public boolean matchesName(String name) {
