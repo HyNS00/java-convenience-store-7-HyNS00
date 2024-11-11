@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import store.enums.ExceptionMessage;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
@@ -22,7 +23,7 @@ class ValidateOrderTest {
     void validateNull_throwsException(String input) {
         assertThatThrownBy(() -> inputValidator.validateOrder(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("빈 칸은 입력될 수 없습니다.");
+                .hasMessage(ExceptionMessage.INVALID_INPUT.getMessage());
     }
 
     @DisplayName("올바르지 않은 구매형식일 때, 대괄호 형식이 잘못된 경우")
@@ -31,7 +32,7 @@ class ValidateOrderTest {
     void validateOrderFormat_invalidBracket_throwsException(String input) {
         assertThatThrownBy(() -> inputValidator.validateOrder(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("올바르지 않은 구매 형식입니다.");
+                .hasMessage(ExceptionMessage.INVALID_FORMAT.getMessage());
     }
 
     @DisplayName("올바르지 않은 구매형식일 때, 숫자가 아닌 문자일 경우")
@@ -40,7 +41,7 @@ class ValidateOrderTest {
     void validateOrderFormat_invalid_Number_throwsException(String input) {
         assertThatThrownBy(() -> inputValidator.validateOrder(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("올바르지 않은 구매 형식입니다.");
+                .hasMessage(ExceptionMessage.INVALID_FORMAT.getMessage());
     }
 
     @DisplayName("올바르지 않은 구매형식일 때, 공백이 포함된 경우")
@@ -49,7 +50,7 @@ class ValidateOrderTest {
     void validateOrderFormat_containsWhiteSpace_throwsException(String input) {
         assertThatThrownBy(() -> inputValidator.validateOrder(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("올바르지 않은 구매 형식입니다.");
+                .hasMessage(ExceptionMessage.INVALID_FORMAT.getMessage());
     }
 
     @DisplayName("올바르지 않은 연속된 구매형식일 때")
@@ -58,7 +59,7 @@ class ValidateOrderTest {
     void validateOrderFormat_whenInValidConsecutiveInput_throwsException(String input) {
         assertThatThrownBy(() -> inputValidator.validateOrder(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("올바르지 않은 구매 형식입니다.");
+                .hasMessage(ExceptionMessage.INVALID_FORMAT.getMessage());
     }
 
     @DisplayName("올바른 구매형식 테스트")

@@ -1,5 +1,6 @@
 package store.model;
 
+import store.enums.ExceptionMessage;
 import store.utils.Converter;
 
 import java.util.HashSet;
@@ -27,7 +28,7 @@ public class Order {
         Set<String> productNames = new HashSet<>();
         for (Order order : orders) {
             if (!productNames.add(order.getName())) {
-                throw new IllegalArgumentException("중복된 상품이 존재합니다.");
+                throw new IllegalArgumentException(ExceptionMessage.DUPLICATE_ORDER.getMessage());
             }
         }
     }

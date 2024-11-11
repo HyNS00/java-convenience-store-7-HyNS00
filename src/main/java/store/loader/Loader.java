@@ -1,5 +1,7 @@
 package store.loader;
 
+import store.enums.ExceptionMessage;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +25,7 @@ public abstract class Loader<T> {
         try (BufferedReader reader = createBufferedReader(resourcePath)) {
             return reader.lines().toList();
         } catch (IOException e) {
-            throw new RuntimeException("파일 읽기 실패");
+            throw new RuntimeException(ExceptionMessage.FILE_READ_ERROR.getMessage());
         }
     }
 
@@ -37,7 +39,7 @@ public abstract class Loader<T> {
         InputStream inputStream = Loader.class.getClassLoader()
                 .getResourceAsStream(resourcePath);
         if (inputStream == null) {
-            throw new IllegalArgumentException("파일을 찾을 수 없습니다");
+            throw new IllegalArgumentException(ExceptionMessage.FILE_NOT_FOUND.getMessage());
         }
         return inputStream;
     }

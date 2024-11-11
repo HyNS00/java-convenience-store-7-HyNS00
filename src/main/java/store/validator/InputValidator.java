@@ -1,5 +1,7 @@
 package store.validator;
 
+import store.enums.ExceptionMessage;
+
 import java.util.regex.Pattern;
 
 public class InputValidator {
@@ -16,7 +18,7 @@ public class InputValidator {
 
     private void validateNotBlank(String input) {
         if (input.isBlank()) {
-            throw new IllegalArgumentException("빈 칸은 입력될 수 없습니다.");
+            throw new IllegalArgumentException(ExceptionMessage.INVALID_INPUT.getMessage());
         }
     }
 
@@ -24,7 +26,7 @@ public class InputValidator {
         String regex = "^\\[([가-힣]+)\\-([1-9][0-9]*)\\](,\\[([가-힣]+)\\-([1-9]+)\\])*$";
         Pattern compile = Pattern.compile(regex);
         if (!compile.matcher(input).matches()) {
-            throw new IllegalArgumentException("올바르지 않은 구매 형식입니다.");
+            throw new IllegalArgumentException(ExceptionMessage.INVALID_FORMAT.getMessage());
         }
     }
 
@@ -32,7 +34,7 @@ public class InputValidator {
         String regex = "^[YN]$";
         Pattern compile = Pattern.compile(regex);
         if (!compile.matcher(input).matches()) {
-            throw new IllegalArgumentException("Y 또는 N만 입력 가능합니다.");
+            throw new IllegalArgumentException(ExceptionMessage.INVALID_INPUT.getMessage());
         }
     }
 }
