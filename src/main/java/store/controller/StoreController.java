@@ -30,12 +30,12 @@ public class StoreController {
         this.paymentService = paymentService;
     }
 
-    public void start(){
+    public void start() {
         boolean continueProgram = true;
 
-        while(continueProgram){
+        while (continueProgram) {
             outputView.welcomeMessage(products);
-            if(!processOrderWithRetry()){
+            if (!processOrderWithRetry()) {
                 continue;
             }
             Receipt receipt = processMemberShip();
@@ -50,96 +50,126 @@ public class StoreController {
         while(true){
             try{
                 List<Order> orders = createOrderWithRetry();
-                if(processOrders(orders,products)){
+                if (processOrders(orders, products)) {
                     return false;
                 }
                 return true;
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 outputView.printErrorMessage(e);
                 return false;
             }
         }
     }
+
     private void updateInventoryForOrders(List<OrderItem> orderItems) {
         for (OrderItem orderItem : orderItems) {
             products.updateInventory(orderItem);
         }
     }
+
     private List<Order> createOrderWithRetry() {
-        while(true){
-            try{
+        while (true) {
+            try {
                 String input = inputView.requestOrder();
                 return Order.parseOrder(input);
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 outputView.printErrorMessage(e);
             }
         }
     }
 
-    private boolean processOrders(List<Order> orders, Products products){
+    private boolean processOrders(List<Order> orders, Products products) {
         orderService.clearOrder();
 
-        for(Order order : orders){
-            try{
-                orderService.processOrder(order);
-                if(promotionService.canApplyPartialPromotion(order.getName(),order.getQuantity())){
-                    if(!handlePartialPromotion(order)){
-                        return true;
-                    }
-                }
-                if (promotionService.requiresAdditionalProduct(order.getName(), order.getQuantity())) {
-                    handleRequiredPromotion(order);
-                }
-                orderService.createAndAddOrderItem(order.getName());
-
-            }catch (IllegalArgumentException e){
-                outputView.printErrorMessage(e);
+        for (Order order : orders) {
+            if (isProcessOrderFailed(order)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean handlePartialPromotion(Order order){
-        while(true){
-            try{
+    private boolean isProcessOrderFailed(Order order) {
+        try {
+            if (!processOrderAndPromotions(order)) {
+                return true;
+            }
+            orderService.createAndAddOrderItem(order.getName());
+            return false;
+        } catch (IllegalArgumentException e) {
+            outputView.printErrorMessage(e);
+            return true;
+        }
+    }
+
+    private boolean processOrderAndPromotions(Order order) {
+        orderService.processOrder(order);
+
+        if (hasPartialPromotion(order) && !handlePartialPromotion(order)) {
+            return false;
+        }
+
+        if (hasRequiredPromotion(order)) {
+            handleRequiredPromotion(order);
+        }
+
+        return true;
+    }
+
+    private boolean hasPartialPromotion(Order order) {
+        return promotionService.canApplyPartialPromotion(
+                order.getName(),
+                order.getQuantity()
+        );
+    }
+
+    private boolean hasRequiredPromotion(Order order) {
+        return promotionService.requiresAdditionalProduct(
+                order.getName(),
+                order.getQuantity()
+        );
+    }
+
+    private boolean handlePartialPromotion(Order order) {
+        while (true) {
+            try {
                 PromotionResult result = PromotionResult.calculate(products, order.getName(), order.getQuantity());
-                String input = inputView.requestPartialPromotion(order.getName(),result);
-                if(input.equals("Y")){
+                String input = inputView.requestPartialPromotion(order.getName(), result);
+                if (input.equals("Y")) {
                     return true;
                 }
                 return false;
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 outputView.printErrorMessage(e);
             }
         }
     }
 
-    private void handleRequiredPromotion(Order order){
-        while(true) {
+    private void handleRequiredPromotion(Order order) {
+        while (true) {
             try {
                 Product promotionProduct = products.findPromotionProduct(order.getName());
                 String input = inputView.requestPlusOrder(promotionProduct);
-                if(input.equals("Y")){
+                if (input.equals("Y")) {
                     orderService.updateOrder(order);
                 }
                 break;
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 outputView.printErrorMessage(e);
             }
         }
     }
 
     private Receipt processMemberShip() {
-        boolean isMembershipApplied = retryWhileValid(()->{
+        boolean isMembershipApplied = retryWhileValid(() -> {
             String input = inputView.requestMembershipOption();
             return input.equals("Y");
         });
-        return paymentService.createReceipt(orderService.getOrderItems(),isMembershipApplied);
+        return paymentService.createReceipt(orderService.getOrderItems(), isMembershipApplied);
     }
 
-    private boolean askForRestart(){
-        return retryWhileValid(()->{
+    private boolean askForRestart() {
+        return retryWhileValid(() -> {
             String input = inputView.requestAdditionalOrder();
             return input.equals("Y");
         });
