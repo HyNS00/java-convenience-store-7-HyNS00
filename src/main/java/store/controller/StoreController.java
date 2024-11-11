@@ -20,14 +20,13 @@ public class StoreController {
     private Products products;
     private PaymentService paymentService;
 
-    public StoreController(InputView inputView, OrderService orderService, PromotionService promotionService,
-                           OutputView outputView, Products products, PaymentService paymentService) {
-        this.products = products;
+    public StoreController(InputView inputView, Products products ,Services services, OutputView outputView) {
         this.inputView = inputView;
-        this.orderService = orderService;
-        this.promotionService = promotionService;
+        this.products = products;
+        this.orderService = services.getOrderService();
+        this.promotionService = services.getPromotionService();
+        this.paymentService = services.getPaymentService();
         this.outputView = outputView;
-        this.paymentService = paymentService;
     }
 
     public void start() {
